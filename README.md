@@ -41,7 +41,8 @@ To create a new message, POST a JSON document to the path `/threads/`.
 ```{
   "threadId": 6,
   "text":  "This is my message"
-}```
+}
+```
 
 Note that `threadId` may be omitted, in which case a new thread will be created.
 
