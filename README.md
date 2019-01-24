@@ -50,3 +50,16 @@ Note that `threadId` may be omitted, in which case a new thread will be created.
 You must be authorized to post a new message.  Include your 64-character auth token in
 the request header `X-WEX-AuthToken`.  Omitting this header or supplying an invalid auth
 token will result in a 403 status.
+
+# The Challenge
+
+There are three open tickets.  One is a bug, and two are new features that should be 
+implemented.  Make the code changes necessary to properly resolve these issues, following
+these practices:
+
+* Each issue should be solved in a separate git commit.  The issue number should be noted
+in the commit message.
+* Any changes made to classes in the `services` or `repositories` packages should also
+have new JUnit tests added to validate their results.
+* Once all three issues are resolved, push your changes to github and submit a pull
+request.
