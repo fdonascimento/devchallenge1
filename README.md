@@ -38,7 +38,8 @@ replacing **threadId** with a valid thread.  E.g., `http://localhost:4567/thread
 
 To create a new message, POST a JSON document to the path `/threads/`.
 
-```{
+```
+{
   "threadId": 6,
   "text":  "This is my message"
 }
