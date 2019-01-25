@@ -43,13 +43,13 @@ public class AuthController {
 				AppUtils.isNullOrEmpty(loginRequest.getPassword()) ||
 				AppUtils.isNullOrEmpty(loginRequest.getUserName())) {
 			resp.status(400);
-			return null;
+			return "";
 		}
 		
 		val user = userRepo.getByName(loginRequest.getUserName());
 		if (user == null) {
 			resp.status(403);
-			return null;
+			return "";
 		}
 	
 		val token = authManager.login(user.getId(), loginRequest.getPassword());
