@@ -1,14 +1,41 @@
 package com.wexinc.interview.challenge1.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-
-@AllArgsConstructor
 public class User {
-	@Getter private int id;
-	@Getter private String name;
-	@Getter @Setter @NonNull private String passHash;
-	@Getter @Setter private AccessLevel access;
+	private int id;
+	private String name;
+	private String passHash;
+	private AccessLevel access;
+
+	public User(int id, String name, String passHash, AccessLevel access) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.passHash = passHash;
+		this.access = access;
+	}
+
+	public String getPassHash() {
+		return passHash;
+	}
+
+	public void setPassHash(String passHash) {
+		this.passHash = passHash;
+	}
+
+	public AccessLevel getAccess() {
+		return access;
+	}
+
+	public void setAccess(AccessLevel access) {
+		this.access = access;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 }

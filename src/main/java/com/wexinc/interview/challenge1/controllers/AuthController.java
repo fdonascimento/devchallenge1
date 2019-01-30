@@ -8,52 +8,56 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.wexinc.interview.challenge1.models.AuthorizationToken;
 import com.wexinc.interview.challenge1.models.LoginRequest;
+import com.wexinc.interview.challenge1.models.User;
 import com.wexinc.interview.challenge1.repositories.UserRepo;
 import com.wexinc.interview.challenge1.services.AuthManager;
 import com.wexinc.interview.challenge1.util.AppUtils;
 import com.wexinc.interview.challenge1.util.Path;
 
-import lombok.NonNull;
-import lombok.val;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class AuthController {
-	@NonNull private UserRepo userRepo;
-	@NonNull private AuthManager authManager;
+	private UserRepo userRepo;
+	private AuthManager authManager;
 	private Logger logger;
-	
+
 	@Inject
 	public AuthController(AuthManager authManager, UserRepo userRepo) {
+		if (authManager == null)
+			throw new IllegalArgumentException("AuthManager cannot be null");
+		if (userRepo == null)
+			throw new IllegalArgumentException("UserRepo cannot be null");
+
 		this.authManager = authManager;
 		this.userRepo = userRepo;
-		
+
 		logger = LoggerFactory.getLogger(getClass());
-		
+
 		logger.info("Starting AuthController");
-		
+
 		post(Path.Login, handleLogin, json());
 	}
-	
+
 	private Route handleLogin = (Request req, Response resp) -> {
-		val loginRequest = new Gson().fromJson(req.body(), LoginRequest.class);
-		if (loginRequest == null || 
-				AppUtils.isNullOrEmpty(loginRequest.getPassword()) ||
-				AppUtils.isNullOrEmpty(loginRequest.getUserName())) {
+		final LoginRequest loginRequest = new Gson().fromJson(req.body(), LoginRequest.class);
+		if (loginRequest == null || AppUtils.isNullOrEmpty(loginRequest.getPassword())
+				|| AppUtils.isNullOrEmpty(loginRequest.getUserName())) {
 			resp.status(400);
 			return "";
 		}
-		
-		val user = userRepo.getByName(loginRequest.getUserName());
+
+		final User user = userRepo.getByName(loginRequest.getUserName());
 		if (user == null) {
 			resp.status(403);
 			return "";
 		}
-	
-		val token = authManager.login(user.getId(), loginRequest.getPassword());
+
+		final AuthorizationToken token = authManager.login(user.getId(), loginRequest.getPassword());
 		return token.getAuthToken();
 	};
-	
+
 }

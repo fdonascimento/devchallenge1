@@ -1,14 +1,36 @@
 package com.wexinc.interview.challenge1.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-
-@AllArgsConstructor
 public class Message {
-	@Getter private int id;
-	@Getter private int userId;
-	@Getter private int threadId;
-	@Getter @Setter @NonNull private String text;
+	private int id;
+	private int userId;
+	private int threadId;
+	private String text;
+
+	public Message(int id, int userId, int threadId, String text) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.threadId = threadId;
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public int getThreadId() {
+		return threadId;
+	}
 }
