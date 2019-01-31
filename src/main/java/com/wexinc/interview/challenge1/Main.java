@@ -19,7 +19,12 @@ public class Main {
 
 		initializeAdminUser(injector.getInstance(UserRepo.class), injector.getInstance(PasswordHasher.class));
 
-		before("*", Filters.addTrailingSlashes);
+		before("*", (req, resp) -> {
+			final String path = req.pathInfo();
+			if (!path.endsWith("/")) {
+				resp.redirect(path + "/", 307);
+			}
+		});
 
 		injector.getInstance(ThreadsController.class);
 		injector.getInstance(AuthController.class);
