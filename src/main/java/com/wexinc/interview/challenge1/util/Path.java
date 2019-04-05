@@ -4,6 +4,7 @@ public class Path {
 	public static final String ThreadList = "/threads/";
 	public static final String OneThread = "/threads/:threadId/";
 	public static final String Login = "/login/";
+	public static final String ChangePassword = "/changePassword/";
 
 	public static String getThreadlist() {
 		return ThreadList;
@@ -16,5 +17,4 @@ public class Path {
 	public static String getLogin() {
 		return Login;
 	}
-
 }
