@@ -64,18 +64,18 @@ public class AuthController {
 
 	private Route handleChangePassword = (Request req, Response resp) -> {
 		final String authToken = req.headers("X-WEX-AuthToken");
-		authManager.verifyAuthToken(authToken);
+		final AuthorizationToken token = authManager.verifyAuthToken(authToken);
 
 		final ChangePassword changePassword = new Gson().fromJson(req.body(), ChangePassword.class);
-		authManager.authenticate(changePassword.getCurrentPassword());
+		authManager.authenticate(token.getUserId(), changePassword.getCurrentPassword());
 
 		if (!changePassword.getNewPassword().equals(changePassword.getVerifyPassword())) {
 			resp.status(400);
 			return "New passwords do not match";
 		}
 
-		final AuthorizationToken token = authManager.changePassword(authToken, changePassword.getNewPassword());
-		return token.getAuthToken();
+		final AuthorizationToken newToken = authManager.changePassword(token, changePassword.getNewPassword());
+		return newToken.getAuthToken();
 	};
 
 }

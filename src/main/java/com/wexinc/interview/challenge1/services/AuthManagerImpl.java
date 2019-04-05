@@ -14,7 +14,6 @@ public class AuthManagerImpl implements AuthManager {
 	private static final HashMap<String, AuthorizationToken> tokens = new HashMap<String, AuthorizationToken>();
 	private PasswordHasher hasher;
 	private UserRepo userRepo;
-	private User loggedUser;
 	
 	@Inject
 	public AuthManagerImpl(PasswordHasher hasher, UserRepo userRepo) {
@@ -35,14 +34,14 @@ public class AuthManagerImpl implements AuthManager {
 		AuthorizationToken token = generateToken(user);
 
 		tokens.put(token.getAuthToken(), token);
-		loggedUser = user;
 		return token;
 	}
 
 	@Override
-	public void authenticate(String password) throws AuthorizationException {
+	public void authenticate(int userId, String password) throws AuthorizationException {
+		User user = userRepo.loadUser(userId);
 		String verifyHash = hasher.hash(password, "salt");
-		if (!verifyHash.equals(loggedUser.getPassHash())) throw new AuthorizationException();
+		if (!verifyHash.equals(user.getPassHash())) throw new AuthorizationException();
 	}
 
 	private AuthorizationToken generateToken(User user) {
@@ -70,15 +69,16 @@ public class AuthManagerImpl implements AuthManager {
 	}
 
 	@Override
-	public AuthorizationToken changePassword(String authToken, String newPassword) throws AuthorizationException {
-		loggedUser.setPassHash(hasher.hash(newPassword, "salt"));
-		userRepo.saveUser(loggedUser);
+	public AuthorizationToken changePassword(AuthorizationToken oldToken, String newPassword) {
+		User user = userRepo.loadUser(oldToken.getUserId());
+		user.setPassHash(hasher.hash(newPassword, "salt"));
 
-		tokens.remove(authToken);
-		AuthorizationToken token = generateToken(loggedUser);
-		tokens.put(token.getAuthToken(), token);
+		tokens.remove(oldToken.getAuthToken());
+		AuthorizationToken newToken = generateToken(user);
+		tokens.put(newToken.getAuthToken(), newToken);
 
-		return token;
+		userRepo.saveUser(user);
+		return newToken;
 	}
 
 	
