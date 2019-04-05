@@ -2,7 +2,6 @@ package com.wexinc.interview.challenge1.controllers;
 
 import static com.wexinc.interview.challenge1.util.JsonUtil.json;
 import static spark.Spark.get;
-import static spark.Spark.notFound;
 import static spark.Spark.post;
 
 import java.util.stream.Collectors;
@@ -80,6 +79,8 @@ public class ThreadsController {
 			thread = threadRepo.createMessage(message.getThreadId(), token.getUserId(), message.getText());
 		}
 
-		return new PostSuccessResponse(thread.getId());
+		AuthorizationToken newAuthToken = authManager.rotateAuthToken(token);
+
+		return new PostSuccessResponse(thread.getId(), newAuthToken.getAuthToken());
 	};
 }

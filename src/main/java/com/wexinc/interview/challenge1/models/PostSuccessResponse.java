@@ -2,10 +2,12 @@ package com.wexinc.interview.challenge1.models;
 
 public class PostSuccessResponse {
 	private int thread;
+	private String authToken;
 
-	public PostSuccessResponse(int thread) {
+	public PostSuccessResponse(int thread, String authToken) {
 		super();
 		this.thread = thread;
+		this.authToken = authToken;
 	}
 
 	public int getThread() {
@@ -16,4 +18,7 @@ public class PostSuccessResponse {
 		this.thread = thread;
 	}
 
+	public String getAuthToken() {
+		return authToken;
+	}
 }
