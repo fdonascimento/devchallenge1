@@ -60,5 +60,42 @@ public class AuthManagerTests {
 		assertNotNull("New token is null", newToken);
 		assertNotEquals("Token values are identical", token.getAuthToken(), newToken.getAuthToken());
 		assertNotNull("New token is invalid", mgr.verifyAuthToken(newToken.getAuthToken()));
-	}	
+	}
+	
+	@Test
+	public void authenticate_whenPasswordIsCorrect_thenAuthenticate() throws AuthorizationException {
+		//when
+		String correctPassword = "password";
+		
+		mgr.authenticate(userId, correctPassword);
+	}
+	
+	@Test(expected=AuthorizationException.class)
+	public void authenticate_whenPasswordIsIncorrect_thenThrowsAuthorizationException() throws AuthorizationException {
+		String worngPassword = "wrong";
+		
+		mgr.authenticate(userId, worngPassword);
+	}
+	
+	@Test(expected=AuthorizationException.class)
+	public void changePassword_whenChangePassword_oldPasswordDontLogin() throws AuthorizationException {
+		String currentPassword = "password";
+		AuthorizationToken token = mgr.login(userId, currentPassword);
+		
+		String newPassword = "newPassword";
+		mgr.changePassword(token, newPassword);
+		
+		mgr.login(userId, currentPassword);
+	}
+	
+	@Test
+	public void changePassword_whenChangePassword_newPasswordLogin() throws AuthorizationException {
+		String currentPassword = "password";
+		AuthorizationToken token = mgr.login(userId, currentPassword);
+		
+		String newPassword = "newPassword";
+		mgr.changePassword(token, newPassword);
+		
+		mgr.login(userId, newPassword);
+	}
 }
