@@ -2,6 +2,7 @@ package com.wexinc.interview.challenge1.controllers;
 
 import static com.wexinc.interview.challenge1.util.JsonUtil.json;
 import static spark.Spark.get;
+import static spark.Spark.notFound;
 import static spark.Spark.post;
 
 import java.util.stream.Collectors;
@@ -49,8 +50,15 @@ public class ThreadsController {
 				json());
 
 		get(Path.OneThread, (req, resp) -> {
-			final int threadId = Integer.parseInt(req.params(":threadId"));
-			return threadRepo.get(threadId);
+			String param = req.params(":threadId");
+			try {
+				final int threadId = Integer.parseInt(param);
+				return threadRepo.get(threadId);
+			} catch (NumberFormatException e) {
+				resp.status(404);
+				return "404 error";
+			}
+
 		}, json());
 
 		post(Path.ThreadList, handleMessagePost, json());
